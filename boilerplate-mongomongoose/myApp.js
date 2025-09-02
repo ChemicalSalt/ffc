@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -8,56 +9,71 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.error("MongoDB connection error:", err));
 
-console.log("MongoDB readyState:", mongoose.connection.readyState);
+// 1. Schema & Model
+const personSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  age: Number,
+  favoriteFoods: [String]
+});
 
-let Person;
+let Person = mongoose.model('Person', personSchema);
 
+// 2. CREATE
 const createAndSavePerson = (done) => {
-  done(null /*, data*/);
+  const jane = new Person({ name: "Jane", age: 25, favoriteFoods: ["pizza"] });
+  jane.save((err, data) => done(err, data));
 };
 
 const createManyPeople = (arrayOfPeople, done) => {
-  done(null /*, data*/);
+  Person.create(arrayOfPeople, (err, data) => done(err, data));
 };
 
+// 3. READ
 const findPeopleByName = (personName, done) => {
-  done(null /*, data*/);
+  Person.find({ name: personName }, (err, data) => done(err, data));
 };
 
 const findOneByFood = (food, done) => {
-  done(null /*, data*/);
+  Person.findOne({ favoriteFoods: food }, (err, data) => done(err, data));
 };
 
 const findPersonById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findById(personId, (err, data) => done(err, data));
 };
 
+// 4. UPDATE
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
-
-  done(null /*, data*/);
+  Person.findById(personId, (err, person) => {
+    if (err) return done(err);
+    person.favoriteFoods.push(foodToAdd);
+    person.save((err, updated) => done(err, updated));
+  });
 };
 
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
-
-  done(null /*, data*/);
+  Person.findOneAndUpdate({ name: personName }, { age: ageToSet }, { new: true }, (err, data) => done(err, data));
 };
 
+// 5. DELETE
 const removeById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findByIdAndRemove(personId, (err, data) => done(err, data));
 };
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
-
-  done(null /*, data*/);
+  Person.deleteMany({ name: nameToRemove }, (err, data) => done(err, data));
 };
 
+// 6. QUERY CHAIN
 const queryChain = (done) => {
   const foodToSearch = "burrito";
-
-  done(null /*, data*/);
+  Person.find({ favoriteFoods: foodToSearch })
+    .sort({ name: 1 })
+    .limit(2)
+    .select("-age")
+    .exec((err, data) => done(err, data));
 };
 
 /** **Well Done !!**
