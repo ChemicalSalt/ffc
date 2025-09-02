@@ -13,7 +13,7 @@ app.use((req, res, next) => {
 
 app.use("/public", express.static(__dirname + "/public"));
 
-app.get("/", function(req, res){
+app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
@@ -25,24 +25,20 @@ app.get("/json", (req, res) => {
 });
 
 app.get("/now", 
-  function(req, res, next) {
+  (req, res, next) => {
     req.time = new Date().toString(); 
     next();
   }, 
-  function(req, res) {
+  (req, res) => {
     res.json({ time: req.time });
   }
 );
+
 app.get("/:word/echo", (req, res) => {
   res.json({ echo: req.params.word });
 });
 
-app.get("/name", (req, res) => {
-  let first = req.query.first;
-  let last = req.query.last;
-  res.json({ name: first + " " + last });
-});
- 
+// Single route handler for GET and POST
 app.route("/name")
   .get((req, res) => {
     let first = req.query.first;
@@ -54,6 +50,5 @@ app.route("/name")
     let last = req.body.last;
     res.json({ name: first + " " + last });
   });
-
 
 module.exports = app;
