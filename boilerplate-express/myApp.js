@@ -41,7 +41,14 @@ app.get("/name", (req, res) => {
   let first = req.query.first;
   let last = req.query.last;
   res.json({ name: first + " " + last });
-})
+});
+ 
+app.route("/name")
+  .get((req, res) => {
+    let first = req.query.first;
+    let last = req.query.last;
+    res.json({ name: first + " " + last });
+  })
   .post((req, res) => {
     let first = req.body.first;
     let last = req.body.last;
