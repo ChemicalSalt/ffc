@@ -8,6 +8,8 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.error("MongoDB connection error:", err));
 
+console.log("MongoDB readyState:", mongoose.connection.readyState);
+
 let Person;
 
 const createAndSavePerson = (done) => {
