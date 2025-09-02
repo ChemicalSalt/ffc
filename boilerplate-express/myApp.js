@@ -1,6 +1,7 @@
 require('dotenv').config();
 let express = require('express');
 let app = express();
+let bodyParser = require("body-parser");
 
 // Root-level logger middleware
 app.use((req, res, next) => {
@@ -39,5 +40,7 @@ app.get("/name", (req, res) => {
   let last = req.query.last;
   res.json({ name: first + " " + last });
 });
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 module.exports = app;
