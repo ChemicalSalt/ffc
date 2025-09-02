@@ -3,6 +3,8 @@ let express = require('express');
 let app = express();
 let bodyParser = require("body-parser");
 
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // Root-level logger middleware
 app.use((req, res, next) => {
   console.log(req.method + " " + req.path + " - " + req.ip);
@@ -41,6 +43,6 @@ app.get("/name", (req, res) => {
   res.json({ name: first + " " + last });
 });
 
-app.use(bodyParser.urlencoded({ extended: false }));
+
 
 module.exports = app;
