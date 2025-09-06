@@ -6,10 +6,10 @@ app.get('/api/:date?', (req, res) => {
   let date;
 
   if (!dateString) {
-    // No date passed → current time
+    // No date → use current time
     date = new Date();
-  } else if (/^\d+$/.test(dateString)) {
-    // If only digits → treat as Unix timestamp (milliseconds)
+  } else if (!isNaN(Number(dateString))) {
+    // If input is numbers only → treat as UNIX ms timestamp
     date = new Date(parseInt(dateString));
   } else {
     // Otherwise → try to parse as date string
@@ -26,5 +26,6 @@ app.get('/api/:date?', (req, res) => {
   });
 });
 
+// Use FCC test port
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
