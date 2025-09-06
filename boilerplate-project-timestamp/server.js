@@ -1,16 +1,18 @@
 const express = require('express');
 const app = express();
 
-app.get('/api/timestamp/:date?', (req, res) => {
+app.get('/api/:date?', (req, res) => {
   let dateString = req.params.date;
-
   let date;
+
   if (!dateString) {
+    // No date passed → current time
     date = new Date();
-  } else if (!isNaN(dateString)) {
-    // If it's a number, treat as UNIX timestamp
+  } else if (/^\d+$/.test(dateString)) {
+    // If only digits → treat as Unix timestamp (milliseconds)
     date = new Date(parseInt(dateString));
   } else {
+    // Otherwise → try to parse as date string
     date = new Date(dateString);
   }
 
@@ -24,4 +26,5 @@ app.get('/api/timestamp/:date?', (req, res) => {
   });
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
