@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
 
+app.get("/", (req, res) => {
+  res.send("Timestamp Microservice is running. Try /api or /api/:date?");
+});
+
 app.get('/api/:date?', (req, res) => {
   let dateString = req.params.date;
   let date;
